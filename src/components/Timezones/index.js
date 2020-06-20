@@ -1,56 +1,54 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { Alert, Button, Container, Row, Col } from "react-bootstrap";
 
 const WORLD_TIME_API_ENDPOINT = "https://worldtimeapi.org/api";
 
-class Timezones extends React.PureComponent {
-  constructor(props) {
-    super(props); 
+const Timezones = () => {
+  const [timezones, setTimezones] = useState([]);
+  const [error, setError] = useState(false);
+  const clicked = useRef(false);
 
-    this.state = {
-      timezones: [],
-      error: false 
-    };
-  }
-
-  getTimezones() {
-    const that = this;
+  const getTimezones = () => {
+    clicked.current = true;
     fetch(`${WORLD_TIME_API_ENDPOINT}/timezone/Europe`)
       .then(response => response.json())
-      .then((timezones) => {
-        timezones && that.setState({
-          timezones,
-          error: false
-        });
+      .then((data) => {
+        setTimezones(data);
+        setError(false);
       })
-      .catch((e) => {
-        e && this.setState({
-          error: true,
-          timezones: []
-        })
+      .catch(() => {
+        setTimezones([]);
+        setError(true);
       });
-  }
+  };
 
-  render() {
-    const listItems = this.state.timezones.map((item, i) => <li key={i}>{item}</li>);
-    return (
-      <Container fluid>
-        {this.state.error && <Row>
-          <Col>
-            <Alert variant="danger"> Something went wrong </Alert>
-          </Col>
-        </Row>}
-        <Row>
-          <Col>
-            <Button variant="primary" onClick={() => this.getTimezones()}>Get timezones</Button>
-          </Col>
-        </Row>
-        <Row>
-          <ul>{listItems}</ul>
-        </Row>
-      </Container>
-    );
-  }
+  const renderContent = () => {
+    if (error) {
+      return <Alert variant="danger"> Something went wrong </Alert>;
+    }
+
+    if (clicked.current && timezones.length === 0) {
+      return <Alert variant="warning"> No results were returned </Alert>;
+    }
+
+    const listItems = timezones.map((item) => <li key={item}>{item}</li>);
+    return <ul>{listItems}</ul>;
+  };
+
+  return (
+    <Container fluid>
+      <Row>
+        <Col>
+          <Button variant="primary" onClick={getTimezones}>Get timezones</Button>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          {renderContent()}
+        </Col>
+      </Row>
+    </Container>
+  );
 }
 
 export default Timezones;

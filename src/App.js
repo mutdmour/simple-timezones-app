@@ -1,8 +1,7 @@
 import React from "react";
 import Timezones from "./components/Timezones";
 
-import "./styles.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "./styles.scss";
 
 export default function App() {
   return (
