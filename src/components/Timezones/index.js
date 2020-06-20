@@ -43,7 +43,7 @@ const Timezones = () => {
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col className="content" md="auto" sm="auto" lg="auto" xlg="auto" xs="auto">
           {renderContent()}
         </Col>
       </Row>
