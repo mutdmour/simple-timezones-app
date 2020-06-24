@@ -1,39 +1,50 @@
-import React, { useState, useRef } from "react";
+import React, { useReducer, useCallback } from "react";
 import { Alert, Button, Container, Row, Col } from "react-bootstrap";
 
 const WORLD_TIME_API_ENDPOINT = "https://worldtimeapi.org/api";
 
 const Timezones = () => {
-  const [timezones, setTimezones] = useState([]);
-  const [error, setError] = useState(false);
-  const clicked = useRef(false);
+  const [state, dispatch] = useReducer((state, {type, payload}) => {
+    switch (type) {
+      case 'error':
+        return {
+          error: true,
+          timezones: []
+        };
+      case 'update':
+        return {
+          error: false,
+          timezones: payload
+        };
+      default:
+        return state;
+    };
+  }, {
+    timezones: [],
+    error: false
+  });
 
   const getTimezones = () => {
-    clicked.current = true;
     fetch(`${WORLD_TIME_API_ENDPOINT}/timezone/Europe`)
       .then(response => response.json())
-      .then((data) => {
-        setTimezones(data);
-        setError(false);
+      .then((payload) => {
+        dispatch({type: 'update', payload})
       })
       .catch(() => {
-        setTimezones([]);
-        setError(true);
+        dispatch({type: 'error'})
       });
   };
 
-  const renderContent = () => {
+  const {timezones, error} = state;
+
+  const renderContent = useCallback(() => {
     if (error) {
       return <Alert variant="danger"> Something went wrong </Alert>;
     }
 
-    if (clicked.current && timezones.length === 0) {
-      return <Alert variant="warning"> No results were returned </Alert>;
-    }
-
     const listItems = timezones.map((item) => <li key={item}>{item}</li>);
     return <ul>{listItems}</ul>;
-  };
+  }, [timezones, error]);
 
   return (
     <Container fluid>
