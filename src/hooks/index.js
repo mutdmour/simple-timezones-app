@@ -11,7 +11,7 @@ const useFetchHandler = () => {
         setData(data);
       })
       .catch(() => {
-        setError(false);
+        setError(true);
         setData(null);
       });
     };
