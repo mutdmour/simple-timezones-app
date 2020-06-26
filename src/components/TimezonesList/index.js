@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './styles.scss';
 
 const TimezonesList = ({timezones}) => {
-  if (timezones.length === 0) {
+  if (!timezones || timezones.length === 0) {
     return null;
   }
 
