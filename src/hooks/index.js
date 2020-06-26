@@ -9,12 +9,13 @@ const useFetchHandler = () => {
       .then((data) => {
         setError(false);
         setData(data);
-      })
-      .catch(() => {
+      }, 
+      () => {
         setError(true);
         setData(null);
-      });
-    };
+      }
+    )
+  };
   
   return {
     error,
