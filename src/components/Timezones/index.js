@@ -1,7 +1,9 @@
 import React, { useReducer, useCallback } from "react";
-import { Alert, Button, Container, Row, Col } from "react-bootstrap";
+import TimezonesList from '../TimezonesList';
 
-const WORLD_TIME_API_ENDPOINT = "https://worldtimeapi.org/api";
+import { getEuropeTimezones } from '../../api/timezones';
+
+import './styles.scss';
 
 const Timezones = () => {
   const [state, dispatch] = useReducer((state, {type, payload}) => {
@@ -18,47 +20,34 @@ const Timezones = () => {
         };
       default:
         return state;
-    };
+    }
   }, {
     timezones: [],
     error: false
   });
 
-  const getTimezones = () => {
-    fetch(`${WORLD_TIME_API_ENDPOINT}/timezone/Europe`)
-      .then(response => response.json())
+  const getTimezones = useCallback((e) => {
+    e.preventDefault();
+
+    getEuropeTimezones()
       .then((payload) => {
         dispatch({type: 'update', payload})
       })
       .catch(() => {
         dispatch({type: 'error'})
       });
-  };
-
-  const {timezones, error} = state;
-
-  const renderContent = useCallback(() => {
-    if (error) {
-      return <Alert variant="danger"> Something went wrong </Alert>;
-    }
-
-    const listItems = timezones.map((item) => <li key={item}>{item}</li>);
-    return <ul>{listItems}</ul>;
-  }, [timezones, error]);
+  }, []);
 
   return (
-    <Container fluid>
-      <Row>
-        <Col>
-          <Button variant="primary" onClick={getTimezones}>Get timezones</Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col className="content" md="auto" sm="auto" lg="auto" xlg="auto" xs="auto">
-          {renderContent()}
-        </Col>
-      </Row>
-    </Container>
+    <div className="container timezones">
+      <div className="row">
+        <button onClick={getTimezones}>Get timezones</button>
+      </div>
+      {state.error ? 
+        <div className="row error"><span> Something went wrong </span></div> :
+        <TimezonesList timezones={state.timezones}
+      />}
+    </div>
   );
 }
 

@@ -1,8 +1,21 @@
-.App {
+* {
+  box-sizing: border-box;
   font-family: sans-serif;
-  margin-top: 15px;
+  font-size: 18px;
+}
 
-  .content {
-    padding-top: 15px;
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    .col {
+      width: 100%;
+    }
   }
 }

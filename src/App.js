@@ -1,12 +1,17 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import Timezones from "./components/Timezones";
+import ErrorBoundary from './components/ErrorBoundary';
 
 import "./styles.scss";
 
 export default function App() {
   return (
-    <div className="App">
-      <Timezones />
-    </div>
+    <StrictMode>
+      <ErrorBoundary>
+        <div className="App">
+          <Timezones />
+        </div>
+      </ErrorBoundary>
+    </StrictMode>
   );
 }
