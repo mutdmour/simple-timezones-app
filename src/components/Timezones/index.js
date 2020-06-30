@@ -13,9 +13,7 @@ const Timezones = () => {
     handleFetch
   } = useFetchHandler();
 
-  const getTimezones = useCallback((e) => {
-    e.preventDefault();
-
+  const getTimezones = useCallback(() => {
     handleFetch(getEuropeTimezones());
   }, [handleFetch]);
 
