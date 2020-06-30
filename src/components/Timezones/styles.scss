@@ -5,6 +5,10 @@
     cursor: pointer;
   }
 
+  button:hover {
+    background-color: #eaeaea;
+  }
+
   .error {
     margin-block-start: 1.8rem;
   }
